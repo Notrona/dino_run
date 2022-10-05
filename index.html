@@ -81,14 +81,14 @@
         //Fisica del juego
         var sueloY = 22;
         var velY = 0;
-        var impulso = 700;
-        var gravedad = 1500;
+        var impulso = 750;
+        var gravedad = 2000;
 
         var dinoPosX = 22;
         var dinoPosY = sueloY;
 
         var suelox = 0;
-        var valEscenario = 1280/2;
+        var valEscenario = 1280/4;
         var gameVel = 1;
 
         var parado = false;
@@ -106,11 +106,9 @@
         }
 
         function Loop(){
-            delaTime = (new Date() - time)/ 5000;
+            delaTime = (new Date() - time)/ 1000;
             time = new Date();
-
             Update();
-
             requestAnimationFrame(Loop);
         }
 
@@ -119,16 +117,39 @@
            suelo = document.querySelector(".suelo");
            contenedor = document.querySelector(".contenedor");
            dino = document.querySelector(".dino");
+           document.addEventListener("keydown",myKeyDown);
 
            Loop(); 
         }
 
+        function myKeyDown(e){
+            if(e.keyCode==32){
+                if(dinoPosY==sueloY){
+                    velY=impulso;
+                    dino.classList.remove("dinoCorriendo");
+                    saltando=true;
+                }
+            }
+        }
+
        function Update(){
-        suelox += ( valEscenario * delaTime * gameVel);
+        SaltaDinosaurio();
+        suelox+=delaTime*gameVel+valEscenario;
         suelo.style.left = -(suelox % contenedor.clientWidth) + "px";
 
+        velY-=gravedad*delaTime;
        }
-       
+        function SaltaDinosaurio(){
+            dinoPosY+=velY*delaTime;
+            if(dinoPosY<sueloY){
+                dinoPosY=sueloY;
+                velY=0;
+    dino.classList.add("dinoCorriendo");
+    saltando=false;
+            }
+
+        dino.style.bottom=dinoPosY+"px"
+        }
     </script>   
 </body>
 </html>
